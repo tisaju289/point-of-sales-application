@@ -59,3 +59,8 @@ a:hover {
   box-shadow: none !important;
 }
 
+
+    /* CSS to style active link */
+.nav-itemnav-link.active {
+  color: green; /* Change to desired active link color */
+}

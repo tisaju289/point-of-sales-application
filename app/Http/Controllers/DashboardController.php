@@ -2,39 +2,63 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Customer;
+use App\Models\Job;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    function DashboardPage():View{
-        return view('pages.dashboard.dashboard-page');
+    function UserDashboardPage():View{
+        return view('pages.user-dashboard.dashboard-page');
+    }
+    function CompanyDashboardPage():View{
+        return view('pages.company-dashboard.dashboard-page');
+    }
+    function AdminDashboardPage():View{
+        return view('pages.admin-dashboard.dashboard-page');
     }
 
-    function Summary(Request $request):array{
-
-        $user_id=$request->header('id');
-
-        $product= Product::where('user_id',$user_id)->count();
-        $Category= Category::where('user_id',$user_id)->count();
-        $Customer=Customer::where('user_id',$user_id)->count();
-        $Invoice= Invoice::where('user_id',$user_id)->count();
-        $total=  Invoice::where('user_id',$user_id)->sum('total');
-        $vat= Invoice::where('user_id',$user_id)->sum('vat');
-        $payable =Invoice::where('user_id',$user_id)->sum('payable');
+    public function AdminSummary(Request $request): array {
+        $Company = Company::count();
+       
+        $jobs = Job::count();
+    
+        return [
+            'Company' => $Company,
+            'jobs' => $jobs,
+        ];
+    }
+    function CompanySummary(Request $request):array{
+        
+        $Active_Company= Company::where('status','=','active')->get()->count();
+        $pending_Company= Company::where('status','=','pending')->get()->count();
+        $jobs=Job::all()->count();
+      
 
         return[
-            'product'=> $product,
-            'category'=> $Category,
-            'customer'=> $Customer,
-            'invoice'=> $Invoice,
-            'total'=> round($total,2),
-            'vat'=> round($vat,2),
-            'payable'=> round($payable,2)
+            'Active_Company'=> $Active_Company,
+            'pending_Company'=> $pending_Company,
+            'jobs'=> $jobs,
+        ];
+
+
+    }
+    function UserSummary(Request $request):array{
+        
+        $Active_Company= Company::where('status','=','active')->get()->count();
+        $pending_Company= Company::where('status','=','pending')->get()->count();
+        $jobs=Job::all()->count();
+      
+
+        return[
+            'Active_Company'=> $Active_Company,
+            'pending_Company'=> $pending_Company,
+            'jobs'=> $jobs,
         ];
 
 

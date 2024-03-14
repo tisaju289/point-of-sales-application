@@ -13,4 +13,10 @@ class User extends Model
         'otp' => '0'
     ];
     protected $hidden = ['password', 'otp'];
+
+
+    public function Applications()
+    {
+        return $this->hasMany(Application::class);
+    }
 }
